@@ -17,8 +17,7 @@ all the request among the appropriate controller
 
 How does auto-configuration works in spring boot
 1) one of the key feature of spring boot is auto-configuration .
-2) This mechanism automatically configures Spring application based on the dependencies in the class path and the beans define by
-by developer
+2) This mechanism automatically configures Spring application based on the dependencies in the class path and the beans define by developer
 its works as 
 1) Spring Boot scans the classpath for libraries and annotations
 2) it matches these against a predefined set of configuration (e.g if spring-boot-starter-web)
@@ -165,4 +164,22 @@ What is concurent Modification Exception
    	but it can also occur in a single-threaded environment if the collection is modified directly while using an iterator.
 
 
+Shallow Copy and Deep Copy
+	Shallow Copy -	
+ 		A shallow copy will simply copy the values of the fields of the original object into the new object. 
+ 		In shallow copy, if the original object has any references to other class objects, then only the reference of that object is cloned. 
+  		Therefore, any changes in this referenced object will be reflected in both the original and the cloned object. 
+    	Deep Copy -
+     		However, a deep copy creates a new object, including all referenced objects, and any changes made to the cloned object will not affect the original object.
 
+Who is responsible to perform action on Jwt Token once it is generated?
+	The server is responsible for acting upon a generated JWT. It does this by verifying the token's signature and claims to authenticate and authorize users. The server can then grant access to protected resources based on the JWT's contents. 
+Here's a more detailed breakdown:
+	1. Token Verification:
+		The server receives a JWT (usually in an HTTP header) from the client. It then verifies the token's signature to ensure it hasn't been tampered with and that it was issued by a trusted source. 
+	2. Claim Validation:
+		The server checks the claims (data) within the JWT, such as the user's ID, roles, and permissions. 
+	3. Authorization Decision:
+		Based on the verified claims and the server's authorization rules, the server decides whether to grant the user access to the requested resource. 
+	4. Access Granted or Denied:
+		If the JWT is valid and the user has permission, the server grants access and proceeds with the request. Otherwise, the server denies access and returns an appropriate error code (e.g., 401 Unauthorized). 
