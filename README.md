@@ -157,3 +157,12 @@ basically reading application properties files we can do using multiple ways
 	2) Using Environment Object
 	3) access system variable directly System.getenv();
 
+
+What is concurent Modification Exception
+	ConcurrentModificationException is a runtime exception in Java 
+ 	that occurs when a collection is modified while it is being iterated over. 
+  	This typically happens when multiple threads are accessing and modifying the same collection concurrently, 
+   	but it can also occur in a single-threaded environment if the collection is modified directly while using an iterator.
+
+
+
