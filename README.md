@@ -183,3 +183,50 @@ Here's a more detailed breakdown:
 		Based on the verified claims and the server's authorization rules, the server decides whether to grant the user access to the requested resource. 
 	4. Access Granted or Denied:
 		If the JWT is valid and the user has permission, the server grants access and proceeds with the request. Otherwise, the server denies access and returns an appropriate error code (e.g., 401 Unauthorized). 
+
+
+Explain bean life cycle in spring boot?
+In Spring Boot, the bean lifecycle is managed by the Spring IoC container, which controls how beans are created, initialized, and destroyed. It starts with instantiation, where the container creates the bean either through a constructor or a factory method. Once the bean is created, Spring performs dependency injection—injecting any required dependencies using annotations like @Autowired.
+After injection, the bean enters the initialization phase. At this point, we can hook into the lifecycle using annotations like @PostConstruct, or by implementing the InitializingBean interface and overriding the afterPropertiesSet() method. This is where we typically perform setup tasks like opening connections or initializing resources.
+Once initialized, the bean is ready for use throughout the application. Finally, when the application context shuts down, Spring triggers the destruction phase. We can define cleanup logic using @PreDestroy, or by implementing the DisposableBean interface and overriding the destroy() method. This is useful for releasing resources, closing connections, or stopping background tasks.
+
+How many Objects are created
+Java has a String pool—a special memory area where string literals are stored to optimize memory usage. When you use a string literal, Java checks if that value already exists in the pool. If it does, it reuses the reference. If not, it adds it.
+🔍 Line-by-Line Breakdown
+1️⃣ String str = new String("Hello");
+- Creates 2 objects:
+- One String literal "Hello" in the String pool (if not already present).
+- One new String object in the heap, which is a copy of the literal.
+2️⃣ String str2 = "Hello";
+- Reuses the "Hello" literal from the String pool.
+- No new object is created.
+3️⃣ String str3 = "Hello";
+- Again, reuses the same "Hello" from the pool.
+- No new object is created.
+
+what is saga pattern 
+
+In a microservices architecture, one of the biggest challenges we face is managing distributed transactions—especially when a business process spans multiple services and databases. Traditional approaches like two-phase commit (2PC) don’t scale well in distributed systems due to their blocking nature and single point of failure. That’s where the Saga Pattern comes in.
+The Saga Pattern is a design pattern used to manage long-running, distributed transactions by breaking them into a series of smaller, local transactions. Each of these transactions is handled by a separate microservice, and after completing its part, the service either triggers the next step or publishes an event. If any step fails, the system executes a compensating transaction to undo the previous steps and maintain consistency.
+There are two main types of saga implementations: choreography and orchestration.
+In choreography-based sagas, each service listens for events and reacts accordingly. For example, in an e-commerce system, when an order is placed, the Order Service publishes an event. The Payment Service listens to it and processes the payment. If successful, it publishes another event that the Inventory Service listens to, and so on. This approach is decentralized and works well for simpler workflows, but it can become hard to manage as the number of services grows.
+On the other hand, orchestration-based sagas use a central orchestrator that controls the flow of the saga. The orchestrator calls each service in sequence and handles failures by invoking compensating actions. This makes the flow easier to visualize and debug, especially in complex business processes.
+Let me give you a real-world example from a project I worked on. We were building a loan approval system where the process involved multiple services: customer verification, credit scoring, document validation, and final approval. Each service had its own database and logic. We implemented the Saga Pattern using orchestration. The orchestrator would initiate the saga, call each service, and if any service failed—for example, if the credit score was too low—it would trigger compensating actions like canceling the loan application and notifying the user.
+One of the key benefits of the Saga Pattern is that it provides eventual consistency rather than strong consistency, which is more realistic in distributed systems. It also improves fault tolerance and scalability. However, it does come with challenges like handling retries, ensuring idempotency, and managing complex rollback logic.
+
+
+What is Pagination?
+Pagination is the process of breaking down large result sets into smaller, manageable chunks—called pages. Instead of loading thousands of records into memory, which can be inefficient and slow, we fetch a limited number of records per request. This improves performance, reduces memory usage, and enhances user experience, especially in APIs and UI-driven applications.
+In Spring Data JPA, pagination is seamlessly supported through the JpaRepository interface, which extends PagingAndSortingRepository. This gives us access to methods like findAll(Pageable pageable) and findAll(Sort sort). The Pageable interface allows us to define the page number, size, and sorting criteria.
+For example, in a book application, if I want to fetch books 10 at a time, I can use:
+Pageable pageable = PageRequest.of(0, 10, Sort.by("title").ascending());
+Page<Book> booksPage = bookRepository.findAll(pageable);
+This will return the first 10 books sorted by title. The Page object also gives metadata like total pages, total elements, and whether it’s the last page—very useful for building paginated APIs.
+Now, regarding JpaRepository, it’s a core interface in Spring Data JPA that abstracts away boilerplate code for CRUD operations. It provides methods like save(), findById(), delete(), and more. What’s powerful is that it supports query derivation, meaning I can define methods like findByAuthor(String author) and Spring will automatically generate the query.
+In real-world projects, I’ve used JpaRepository to build scalable, maintainable data access layers. Combined with pagination, it helps us handle performance-sensitive endpoints, especially in admin dashboards, reporting modules, and search features.
+To sum up: pagination helps us manage large data efficiently, and JpaRepository simplifies data access with powerful abstractions. Together, they’re essential tools in any Spring Boot developer’s toolkit.
+
+
+
+
+
